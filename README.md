@@ -12,7 +12,7 @@
 
 ## 🌐 مشاهده آنلاین  
 سایت در آدرس زیر قابل دسترسی است:  
-🔗 [https://yourusername.github.io](https://areour-8.github.io)
+🔗 [https://areour-8.github.io](https://areour-8.github.io)
 
 ## 📜 لایسنس  
 این پروژه تحت لایسنس [MIT](LICENSE) منتشر شده است.
