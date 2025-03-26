@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ورود به حساب</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h2>ورود به حساب کاربری</h2>
+        <form id="loginForm">
+            <input type="email" id="email" placeholder="ایمیل" required>
+            <input type="password" id="password" placeholder="رمز عبور" required>
+            <button type="submit">ورود</button>
+        </form>
+        <p>حساب ندارید؟ <a href="register.html">ثبتنام کنید</a></p>
+    </div>
+
+    <script src="firebase-config.js"></script>
+    <script src="auth.js"></script>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', e => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            auth.signInWithEmailAndPassword(email, password)
+                .then(() => {
+                    window.location.href = 'profile.html';
+                })
+                .catch(error => {
+                    alert('خطا: ' + error.message);
+                });
+        });
+    </script>
+</body>
+</html>
