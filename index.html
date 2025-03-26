@@ -1,43 +1,28 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl"> <!-- پشتیبانی از زبان فارسی و راستچین -->
+<html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔰ایده نوپا🔰</title>
-    
-    <!-- لینک به فایل استایل -->
+    <title>سایت من | صفحه اصلی</title>
     <link rel="stylesheet" href="style.css">
-    
-    <!-- فونت از گوگل فونت (اختیاری) -->
-    <link href="https://v1.fontapi.ir/css/Vazir" rel="stylesheet">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
 </head>
 <body>
+    <nav>
+        <a href="index.html">خانه</a>
+        <a href="profile.html">پروفایل</a>
+        <a href="login.html" id="loginBtn">ورود</a>
+        <button onclick="logout()" id="logoutBtn" style="display: none;">خروج</button>
+    </nav>
+
     <div class="container">
-        <!-- هدر سایت -->
-        <header>
-            <h1>به سایت من خوش آمدید! 🎉</h1>
-        </header>
-
-        <!-- محتوای اصلی -->
-        <main>
-            <p id="greeting">این یک نمونه سایت ساده با قابلیتهای زیر است:</p>
-            <ul>
-                <li>ریسپانسیو</li>
-                <li>دارای تعامل با JavaScript</li>
-                <li>طراحی مدرن با CSS</li>
-            </ul>
-            
-            <!-- دکمه تعاملی -->
-            <button class="btn" onclick="showAlert()">کلیک کنید!</button>
-        </main>
-
-        <!-- فوتر -->
-        <footer>
-            <p>© 2024 تمام حقوق محفوظ است.</p>
-        </footer>
+        <h1>خوش آمدید! 🌟</h1>
+        <p>این یک سایت با قابلیت حساب کاربری است.</p>
     </div>
 
-    <!-- لینک به فایل JavaScript -->
-    <script src="script.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="auth.js"></script>
 </body>
 </html>
