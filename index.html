@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ماشین حساب آماری</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .input-transition {
+            transition: all 0.3s ease;
+        }
+        .input-transition:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .result-card {
+            transition: all 0.3s ease;
+        }
+        .result-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .glow {
+            animation: glow 2s infinite alternate;
+        }
+        @keyframes glow {
+            from {
+                box-shadow: 0 0 5px rgba(99, 102, 241, 0.5);
+            }
+            to {
+                box-shadow: 0 0 15px rgba(99, 102, 241, 0.8);
+            }
+        }
+        [lang="en"] {
+            direction: ltr;
+        }
+        .lang-switcher {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+        }
+        .lang-btn {
+            background-color: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 9999px;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        .lang-btn:hover {
+            background-color: #f3f4f6;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
+    <!-- Language Switcher -->
+    <div class="lang-switcher">
+        <button id="langBtn" class="lang-btn flex items-center">
+            <i class="fas fa-language mr-2"></i>
+            <span id="langText">English</span>
+        </button>
+    </div>
+
+    <div class="container mx-auto px-4 py-12">
+        <div class="max-w-4xl mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-12">
+                <h1 class="text-4xl font-bold text-indigo-600 mb-3" data-i18n="title">ماشین حساب آماری</h1>
+                <p class="text-gray-600 text-lg" data-i18n="subtitle">مقادیر عددی خود را وارد کنید و تحلیل آماری جامع دریافت کنید</p>
+            </div>
+            
+            <!-- Input Section -->
+            <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-semibold text-gray-800" data-i18n="inputTitle">ورودی داده</h2>
+                    <button id="addInput" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg flex items-center transition-colors">
+                        <i class="fas fa-plus ml-2"></i>
+                        <span data-i18n="addValue">افزودن مقدار</span>
+                    </button>
+                </div>
+                
+                <div id="inputContainer" class="space-y-4">
+                    <div class="flex items-center">
+                        <input type="number" step="any" class="input-transition flex-grow border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="عدد را وارد کنید" data-i18n-placeholder="inputPlaceholder">
+                        <button class="remove-btn mr-3 text-red-500 hover:text-red-700 p-2 rounded-full hover:bg-red-50 transition-colors">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="mt-6 flex justify-end">
+                    <button id="calculateBtn" class="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-6 py-3 rounded-lg font-medium shadow-md transition-all transform hover:scale-105">
+                        <span data-i18n="calculate">محاسبه آمار</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Results Section -->
+            <div id="resultsSection" class="hidden bg-white rounded-xl shadow-lg p-6">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-6" data-i18n="resultsTitle">نتایج آماری</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="result-card bg-indigo-50 rounded-lg p-5 border border-indigo-100">
+                        <div class="flex items-center mb-2">
+                            <div class="bg-indigo-100 p-2 rounded-full ml-3">
+                                <i class="fas fa-calculator text-indigo-600"></i>
+                            </div>
+                            <h3 class="text-lg font-medium text-gray-800" data-i18n="mean">میانگین</h3>
+                        </div>
+                        <p id="meanResult" class="text-3xl font-bold text-indigo-600">-</p>
+                        <p class="text-gray-500 mt-1" data-i18n="meanDesc">میانگین تمام مقادیر</p>
+                    </div>
+                    
+                    <div class="result-card bg-purple-50 rounded-lg p-5 border border-purple-100">
+                        <div class="flex items-center mb-2">
+                            <div class="bg-purple-100 p-2 rounded-full ml-3">
+                                <i class="fas fa-chart-line text-purple-600"></i>
+                            </div>
+                            <h3 class="text-lg font-medium text-gray-800" data-i18n="variance">واریانس</h3>
+                        </div>
+                        <p id="varianceResult" class="text-3xl font-bold text-purple-600">-</p>
+                        <p class="text-gray-500 mt-1" data-i18n="varianceDesc">معیار پراکندگی داده‌ها</p>
+                    </div>
+                    
+                    <div class="result-card bg-blue-50 rounded-lg p-5 border border-blue-100">
+                        <div class="flex items-center mb-2">
+                            <div class="bg-blue-100 p-2 rounded-full ml-3">
+                                <i class="fas fa-ruler text-blue-600"></i>
+                            </div>
+                            <h3 class="text-lg font-medium text-gray-800" data-i18n="stdDev">انحراف معیار</h3>
+                        </div>
+                        <p id="stdDevResult" class="text-3xl font-bold text-blue-600">-</p>
+                        <p class="text-gray-500 mt-1" data-i18n="stdDevDesc">جذر واریانس</p>
+                    </div>
+                    
+                    <div class="result-card bg-green-50 rounded-lg p-5 border border-green-100 glow">
+                        <div class="flex items-center mb-2">
+                            <div class="bg-green-100 p-2 rounded-full ml-3">
+                                <i class="fas fa-percent text-green-600"></i>
+                            </div>
+                            <h3 class="text-lg font-medium text-gray-800" data-i18n="coeffVar">ضریب تغییرات</h3>
+                        </div>
+                        <p id="coeffVarResult" class="text-3xl font-bold text-green-600">-</p>
+                        <p class="text-gray-500 mt-1" data-i18n="coeffVarDesc">معیار نسبی پراکندگی</p>
+                    </div>
+                </div>
+                
+                <div class="mt-8 bg-gray-50 rounded-lg p-4">
+                    <h3 class="font-medium text-gray-700 mb-2" data-i18n="yourData">داده‌های شما:</h3>
+                    <div id="dataList" class="flex flex-wrap gap-2">
+                        <span class="bg-gray-200 px-3 py-1 rounded-full text-sm" data-i18n="noData">داده‌ای وارد نشده</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputContainer = document.getElementById('inputContainer');
+            const addInputBtn = document.getElementById('addInput');
+            const calculateBtn = document.getElementById('calculateBtn');
+            const resultsSection = document.getElementById('resultsSection');
+            const langBtn = document.getElementById('langBtn');
+            const langText = document.getElementById('langText');
+            
+            // Language data
+            const translations = {
+                'fa': {
+                    'title': 'ماشین حساب آماری',
+                    'subtitle': 'مقادیر عددی خود را وارد کنید و تحلیل آماری جامع دریافت کنید',
+                    'inputTitle': 'ورودی داده',
+                    'addValue': 'افزودن مقدار',
+                    'inputPlaceholder': 'عدد را وارد کنید',
+                    'calculate': 'محاسبه آمار',
+                    'resultsTitle': 'نتایج آماری',
+                    'mean': 'میانگین',
+                    'meanDesc': 'میانگین تمام مقادیر',
+                    'variance': 'واریانس',
+                    'varianceDesc': 'معیار پراکندگی داده‌ها',
+                    'stdDev': 'انحراف معیار',
+                    'stdDevDesc': 'جذر واریانس',
+                    'coeffVar': 'ضریب تغییرات',
+                    'coeffVarDesc': 'معیار نسبی پراکندگی',
+                    'yourData': 'داده‌های شما:',
+                    'noData': 'داده‌ای وارد نشده',
+                    'langName': 'English'
+                },
+                'en': {
+                    'title': 'Statistical Calculator',
+                    'subtitle': 'Enter your numerical data and get comprehensive statistical analysis',
+                    'inputTitle': 'Data Input',
+                    'addValue': 'Add Value',
+                    'inputPlaceholder': 'Enter a number',
+                    'calculate': 'Calculate Statistics',
+                    'resultsTitle': 'Statistical Results',
+                    'mean': 'Mean (Average)',
+                    'meanDesc': 'The average of all values',
+                    'variance': 'Variance',
+                    'varianceDesc': 'Measure of data dispersion',
+                    'stdDev': 'Standard Deviation',
+                    'stdDevDesc': 'Square root of variance',
+                    'coeffVar': 'Coefficient of Variation',
+                    'coeffVarDesc': 'Relative measure of dispersion',
+                    'yourData': 'Your Data:',
+                    'noData': 'No data entered',
+                    'langName': 'فارسی'
+                }
+            };
+            
+            // Current language (default is Persian)
+            let currentLang = 'fa';
+            
+            // Language switcher
+            langBtn.addEventListener('click', function() {
+                currentLang = currentLang === 'fa' ? 'en' : 'fa';
+                updateLanguage();
+            });
+            
+            // Update language
+            function updateLanguage() {
+                // Update HTML lang attribute and direction
+                document.documentElement.lang = currentLang;
+                document.documentElement.dir = currentLang === 'fa' ? 'rtl' : 'ltr';
+                
+                // Update language button text
+                langText.textContent = translations[currentLang].langName;
+                
+                // Update all translatable elements
+                document.querySelectorAll('[data-i18n]').forEach(el => {
+                    const key = el.getAttribute('data-i18n');
+                    el.textContent = translations[currentLang][key];
+                });
+                
+                // Update placeholders
+                document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                    const key = el.getAttribute('data-i18n-placeholder');
+                    el.placeholder = translations[currentLang][key];
+                });
+                
+                // Update flex directions for icons
+                if (currentLang === 'fa') {
+                    document.querySelectorAll('.remove-btn').forEach(btn => {
+                        btn.classList.remove('ml-3');
+                        btn.classList.add('mr-3');
+                    });
+                    document.querySelectorAll('.fa-plus').forEach(icon => {
+                        icon.classList.remove('mr-2');
+                        icon.classList.add('ml-2');
+                    });
+                    document.querySelectorAll('[class*="ml-"]').forEach(el => {
+                        const classes = el.className.split(' ');
+                        classes.forEach((cls, index) => {
+                            if (cls.startsWith('ml-')) {
+                                classes[index] = cls.replace('ml-', 'mr-');
+                            } else if (cls.startsWith('mr-')) {
+                                classes[index] = cls.replace('mr-', 'ml-');
+                            }
+                        });
+                        el.className = classes.join(' ');
+                    });
+                } else {
+                    document.querySelectorAll('.remove-btn').forEach(btn => {
+                        btn.classList.remove('mr-3');
+                        btn.classList.add('ml-3');
+                    });
+                    document.querySelectorAll('.fa-plus').forEach(icon => {
+                        icon.classList.remove('ml-2');
+                        icon.classList.add('mr-2');
+                    });
+                    document.querySelectorAll('[class*="mr-"]').forEach(el => {
+                        const classes = el.className.split(' ');
+                        classes.forEach((cls, index) => {
+                            if (cls.startsWith('mr-')) {
+                                classes[index] = cls.replace('mr-', 'ml-');
+                            } else if (cls.startsWith('ml-')) {
+                                classes[index] = cls.replace('ml-', 'mr-');
+                            }
+                        });
+                        el.className = classes.join(' ');
+                    });
+                }
+            }
+            
+            // Add new input field
+            addInputBtn.addEventListener('click', function() {
+                const newInput = document.createElement('div');
+                newInput.className = 'flex items-center';
+                newInput.innerHTML = `
+                    <input type="number" step="any" class="input-transition flex-grow border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="${translations[currentLang].inputPlaceholder}">
+                    <button class="remove-btn ${currentLang === 'fa' ? 'mr-3' : 'ml-3'} text-red-500 hover:text-red-700 p-2 rounded-full hover:bg-red-50 transition-colors">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                inputContainer.appendChild(newInput);
+                
+                // Add event to remove button
+                newInput.querySelector('.remove-btn').addEventListener('click', function() {
+                    inputContainer.removeChild(newInput);
+                });
+            });
+            
+            // Calculate statistics
+            calculateBtn.addEventListener('click', function() {
+                const inputs = inputContainer.querySelectorAll('input');
+                const values = [];
+                
+                inputs.forEach(input => {
+                    if (input.value.trim() !== '') {
+                        values.push(parseFloat(input.value));
+                    }
+                });
+                
+                if (values.length === 0) {
+                    alert(currentLang === 'fa' ? 'لطفاً حداقل یک مقدار وارد کنید' : 'Please enter at least one value');
+                    return;
+                }
+                
+                // Calculate statistics
+                const mean = calculateMean(values);
+                const variance = calculateVariance(values, mean);
+                const stdDev = Math.sqrt(variance);
+                const coeffVar = (stdDev / mean) * 100;
+                
+                // Display results
+                document.getElementById('meanResult').textContent = mean.toFixed(4);
+                document.getElementById('varianceResult').textContent = variance.toFixed(4);
+                document.getElementById('stdDevResult').textContent = stdDev.toFixed(4);
+                document.getElementById('coeffVarResult').textContent = coeffVar.toFixed(2) + '%';
+                
+                // Display data list
+                const dataList = document.getElementById('dataList');
+                dataList.innerHTML = '';
+                if (values.length === 0) {
+                    const noData = document.createElement('span');
+                    noData.className = 'bg-gray-200 px-3 py-1 rounded-full text-sm';
+                    noData.textContent = translations[currentLang].noData;
+                    dataList.appendChild(noData);
+                } else {
+                    values.forEach(value => {
+                        const dataItem = document.createElement('span');
+                        dataItem.className = 'bg-gray-200 px-3 py-1 rounded-full text-sm';
+                        dataItem.textContent = value;
+                        dataList.appendChild(dataItem);
+                    });
+                }
+                
+                // Show results section
+                resultsSection.classList.remove('hidden');
+                
+                // Scroll to results
+                resultsSection.scrollIntoView({ behavior: 'smooth' });
+            });
+            
+            // Helper functions
+            function calculateMean(values) {
+                const sum = values.reduce((acc, val) => acc + val, 0);
+                return sum / values.length;
+            }
+            
+            function calculateVariance(values, mean) {
+                const squaredDiffs = values.map(val => Math.pow(val - mean, 2));
+                const sumSquaredDiffs = squaredDiffs.reduce((acc, val) => acc + val, 0);
+                return sumSquaredDiffs / values.length;
+            }
+            
+            // Add event to initial remove button
+            if (inputContainer.querySelector('.remove-btn')) {
+                inputContainer.querySelector('.remove-btn').addEventListener('click', function() {
+                    if (inputContainer.children.length > 1) {
+                        inputContainer.removeChild(inputContainer.firstElementChild);
+                    } else {
+                        inputContainer.querySelector('input').value = '';
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
