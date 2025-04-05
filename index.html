@@ -3,10 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ماشین حساب آماری</title>
+    <title>ماشین حساب آماری </title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+        }
         .input-transition {
             transition: all 0.3s ease;
         }
@@ -38,50 +42,126 @@
         .lang-switcher {
             position: fixed;
             top: 20px;
-            left: 20px;
+            right: 20px;
             z-index: 100;
         }
         .lang-btn {
-            background-color: white;
+            background-color: rgba(255, 255, 255, 0.9);
             border: 1px solid #e5e7eb;
             border-radius: 9999px;
             padding: 0.5rem 1rem;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            backdrop-filter: blur(5px);
         }
         .lang-btn:hover {
             background-color: #f3f4f6;
             transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        .lang-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 8px;
+            font-size: 12px;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+        }
+        .clear-all-btn {
+            background-color: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .clear-all-btn:hover {
+            background-color: #fee2e2;
+            transform: translateY(-1px);
+        }
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        /* هشدار جدید */
+        .number-warning {
+            background-color: #ffedd5;
+            border-right: 4px solid #f97316;
+            color: #9a3412;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+        .number-warning i {
+            margin-left: 0.5rem;
+            font-size: 1.25rem;
+        }
+        [lang="en"] .number-warning {
+            border-right: none;
+            border-left: 4px solid #f97316;
+        }
+        [lang="en"] .number-warning i {
+            margin-left: 0;
+            margin-right: 0.5rem;
         }
     </style>
 </head>
 <body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
     <!-- Language Switcher -->
     <div class="lang-switcher">
-        <button id="langBtn" class="lang-btn flex items-center">
-            <i class="fas fa-language mr-2"></i>
+        <button id="langBtn" class="lang-btn">
             <span id="langText">English</span>
+            <span class="lang-icon">
+                <i class="fas fa-exchange-alt"></i>
+            </span>
         </button>
     </div>
 
     <div class="container mx-auto px-4 py-12">
-        <div class="max-w-4xl mx-auto">
+        <div class="max-w-6xl mx-auto">
             <!-- Header -->
             <div class="text-center mb-12">
-                <h1 class="text-4xl font-bold text-indigo-600 mb-3" data-i18n="title">ماشین حساب آماری</h1>
+                <h1 class="text-4xl font-bold text-indigo-600 mb-3" data-i18n="title">ماشین حساب آماری پیشرفته</h1>
                 <p class="text-gray-600 text-lg" data-i18n="subtitle">مقادیر عددی خود را وارد کنید و تحلیل آماری جامع دریافت کنید</p>
             </div>
             
             <!-- Input Section -->
             <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+                <!-- هشدار جدید -->
+                <div class="number-warning" data-i18n="numberWarning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>لطفاً از اعداد انگلیسی (0-9) برای ورودی استفاده کنید</span>
+                </div>
+                
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-2xl font-semibold text-gray-800" data-i18n="inputTitle">ورودی داده</h2>
-                    <button id="addInput" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg flex items-center transition-colors">
-                        <i class="fas fa-plus ml-2"></i>
-                        <span data-i18n="addValue">افزودن مقدار</span>
-                    </button>
+                    <div class="flex space-x-3" style="direction: ltr;">
+                        <button id="clearAll" class="clear-all-btn flex items-center">
+                            <i class="fas fa-trash-alt mr-2"></i>
+                            <span data-i18n="clearAll">حذف همه</span>
+                        </button>
+                        <button id="addInput" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg flex items-center transition-colors">
+                            <i class="fas fa-plus ml-2"></i>
+                            <span data-i18n="addValue">افزودن مقدار</span>
+                        </button>
+                    </div>
                 </div>
                 
                 <div id="inputContainer" class="space-y-4">
@@ -94,7 +174,8 @@
                 </div>
                 
                 <div class="mt-6 flex justify-end">
-                    <button id="calculateBtn" class="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-6 py-3 rounded-lg font-medium shadow-md transition-all transform hover:scale-105">
+                    <button id="calculateBtn" class="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-6 py-3 rounded-lg font-medium shadow-md transition-all transform hover:scale-105 flex items-center">
+                        <i class="fas fa-calculator ml-2"></i>
                         <span data-i18n="calculate">محاسبه آمار</span>
                     </button>
                 </div>
@@ -104,11 +185,12 @@
             <div id="resultsSection" class="hidden bg-white rounded-xl shadow-lg p-6">
                 <h2 class="text-2xl font-semibold text-gray-800 mb-6" data-i18n="resultsTitle">نتایج آماری</h2>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Basic Statistics -->
                     <div class="result-card bg-indigo-50 rounded-lg p-5 border border-indigo-100">
                         <div class="flex items-center mb-2">
-                            <div class="bg-indigo-100 p-2 rounded-full ml-3">
-                                <i class="fas fa-calculator text-indigo-600"></i>
+                            <div class="stat-icon bg-indigo-100 text-indigo-600">
+                                <i class="fas fa-calculator"></i>
                             </div>
                             <h3 class="text-lg font-medium text-gray-800" data-i18n="mean">میانگین</h3>
                         </div>
@@ -118,8 +200,8 @@
                     
                     <div class="result-card bg-purple-50 rounded-lg p-5 border border-purple-100">
                         <div class="flex items-center mb-2">
-                            <div class="bg-purple-100 p-2 rounded-full ml-3">
-                                <i class="fas fa-chart-line text-purple-600"></i>
+                            <div class="stat-icon bg-purple-100 text-purple-600">
+                                <i class="fas fa-chart-line"></i>
                             </div>
                             <h3 class="text-lg font-medium text-gray-800" data-i18n="variance">واریانس</h3>
                         </div>
@@ -129,8 +211,8 @@
                     
                     <div class="result-card bg-blue-50 rounded-lg p-5 border border-blue-100">
                         <div class="flex items-center mb-2">
-                            <div class="bg-blue-100 p-2 rounded-full ml-3">
-                                <i class="fas fa-ruler text-blue-600"></i>
+                            <div class="stat-icon bg-blue-100 text-blue-600">
+                                <i class="fas fa-ruler"></i>
                             </div>
                             <h3 class="text-lg font-medium text-gray-800" data-i18n="stdDev">انحراف معیار</h3>
                         </div>
@@ -138,15 +220,95 @@
                         <p class="text-gray-500 mt-1" data-i18n="stdDevDesc">جذر واریانس</p>
                     </div>
                     
-                    <div class="result-card bg-green-50 rounded-lg p-5 border border-green-100 glow">
+                    <!-- New Statistics -->
+                    <div class="result-card bg-green-50 rounded-lg p-5 border border-green-100">
                         <div class="flex items-center mb-2">
-                            <div class="bg-green-100 p-2 rounded-full ml-3">
-                                <i class="fas fa-percent text-green-600"></i>
+                            <div class="stat-icon bg-green-100 text-green-600">
+                                <i class="fas fa-sort-numeric-down"></i>
+                            </div>
+                            <h3 class="text-lg font-medium text-gray-800" data-i18n="median">میانه</h3>
+                        </div>
+                        <p id="medianResult" class="text-3xl font-bold text-green-600">-</p>
+                        <p class="text-gray-500 mt-1" data-i18n="medianDesc">مقدار وسطی داده‌ها</p>
+                    </div>
+                    
+                    <div class="result-card bg-yellow-50 rounded-lg p-5 border border-yellow-100">
+                        <div class="flex items-center mb-2">
+                            <div class="stat-icon bg-yellow-100 text-yellow-600">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <h3 class="text-lg font-medium text-gray-800" data-i18n="mode">مد</h3>
+                        </div>
+                        <p id="modeResult" class="text-3xl font-bold text-yellow-600">-</p>
+                        <p class="text-gray-500 mt-1" data-i18n="modeDesc">مقدار پرتکرار در داده‌ها</p>
+                    </div>
+                    
+                    <div class="result-card bg-red-50 rounded-lg p-5 border border-red-100 glow">
+                        <div class="flex items-center mb-2">
+                            <div class="stat-icon bg-red-100 text-red-600">
+                                <i class="fas fa-percent"></i>
                             </div>
                             <h3 class="text-lg font-medium text-gray-800" data-i18n="coeffVar">ضریب تغییرات</h3>
                         </div>
-                        <p id="coeffVarResult" class="text-3xl font-bold text-green-600">-</p>
+                        <p id="coeffVarResult" class="text-3xl font-bold text-red-600">-</p>
                         <p class="text-gray-500 mt-1" data-i18n="coeffVarDesc">معیار نسبی پراکندگی</p>
+                    </div>
+                    
+                    <!-- Quartiles -->
+                    <div class="result-card bg-pink-50 rounded-lg p-5 border border-pink-100">
+                        <div class="flex items-center mb-2">
+                            <div class="stat-icon bg-pink-100 text-pink-600">
+                                <i class="fas fa-chart-pie"></i>
+                            </div>
+                            <h3 class="text-lg font-medium text-gray-800" data-i18n="quartiles">چارک‌ها</h3>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2 mt-3">
+                            <div>
+                                <p class="text-sm text-gray-500" data-i18n="q1">چارک اول (Q1)</p>
+                                <p id="q1Result" class="text-xl font-semibold text-pink-600">-</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500" data-i18n="q2">چارک دوم (Q2)</p>
+                                <p id="q2Result" class="text-xl font-semibold text-pink-600">-</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500" data-i18n="q3">چارک سوم (Q3)</p>
+                                <p id="q3Result" class="text-xl font-semibold text-pink-600">-</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Range -->
+                    <div class="result-card bg-teal-50 rounded-lg p-5 border border-teal-100">
+                        <div class="flex items-center mb-2">
+                            <div class="stat-icon bg-teal-100 text-teal-600">
+                                <i class="fas fa-arrows-alt-h"></i>
+                            </div>
+                            <h3 class="text-lg font-medium text-gray-800" data-i18n="range">دامنه</h3>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 mt-3">
+                            <div>
+                                <p class="text-sm text-gray-500" data-i18n="min">حداقل</p>
+                                <p id="minResult" class="text-xl font-semibold text-teal-600">-</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500" data-i18n="max">حداکثر</p>
+                                <p id="maxResult" class="text-xl font-semibold text-teal-600">-</p>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500 mt-2" data-i18n="rangeValue">دامنه تغییرات: <span id="rangeValue" class="font-medium">-</span></p>
+                    </div>
+                    
+                    <!-- Count -->
+                    <div class="result-card bg-cyan-50 rounded-lg p-5 border border-cyan-100">
+                        <div class="flex items-center mb-2">
+                            <div class="stat-icon bg-cyan-100 text-cyan-600">
+                                <i class="fas fa-list-ol"></i>
+                            </div>
+                            <h3 class="text-lg font-medium text-gray-800" data-i18n="count">تعداد داده‌ها</h3>
+                        </div>
+                        <p id="countResult" class="text-3xl font-bold text-cyan-600">-</p>
+                        <p class="text-gray-500 mt-1" data-i18n="countDesc">تعداد مقادیر وارد شده</p>
                     </div>
                 </div>
                 
@@ -168,14 +330,16 @@
             const resultsSection = document.getElementById('resultsSection');
             const langBtn = document.getElementById('langBtn');
             const langText = document.getElementById('langText');
+            const clearAllBtn = document.getElementById('clearAll');
             
             // Language data
             const translations = {
                 'fa': {
-                    'title': 'ماشین حساب آماری',
+                    'title': 'ماشین حساب آماری پیشرفته',
                     'subtitle': 'مقادیر عددی خود را وارد کنید و تحلیل آماری جامع دریافت کنید',
                     'inputTitle': 'ورودی داده',
                     'addValue': 'افزودن مقدار',
+                    'clearAll': 'حذف همه',
                     'inputPlaceholder': 'عدد را وارد کنید',
                     'calculate': 'محاسبه آمار',
                     'resultsTitle': 'نتایج آماری',
@@ -185,17 +349,33 @@
                     'varianceDesc': 'معیار پراکندگی داده‌ها',
                     'stdDev': 'انحراف معیار',
                     'stdDevDesc': 'جذر واریانس',
+                    'median': 'میانه',
+                    'medianDesc': 'مقدار وسطی داده‌ها',
+                    'mode': 'مد',
+                    'modeDesc': 'مقدار پرتکرار در داده‌ها',
                     'coeffVar': 'ضریب تغییرات',
                     'coeffVarDesc': 'معیار نسبی پراکندگی',
+                    'quartiles': 'چارک‌ها',
+                    'q1': 'چارک اول (Q1)',
+                    'q2': 'چارک دوم (Q2)',
+                    'q3': 'چارک سوم (Q3)',
+                    'range': 'دامنه',
+                    'min': 'حداقل',
+                    'max': 'حداکثر',
+                    'rangeValue': 'دامنه تغییرات',
+                    'count': 'تعداد داده‌ها',
+                    'countDesc': 'تعداد مقادیر وارد شده',
                     'yourData': 'داده‌های شما:',
                     'noData': 'داده‌ای وارد نشده',
-                    'langName': 'English'
+                    'langName': 'English',
+                    'numberWarning': 'لطفاً از اعداد انگلیسی (0-9) برای ورودی استفاده کنید'
                 },
                 'en': {
-                    'title': 'Statistical Calculator',
+                    'title': 'Advanced Statistical Calculator',
                     'subtitle': 'Enter your numerical data and get comprehensive statistical analysis',
                     'inputTitle': 'Data Input',
                     'addValue': 'Add Value',
+                    'clearAll': 'Clear All',
                     'inputPlaceholder': 'Enter a number',
                     'calculate': 'Calculate Statistics',
                     'resultsTitle': 'Statistical Results',
@@ -205,11 +385,26 @@
                     'varianceDesc': 'Measure of data dispersion',
                     'stdDev': 'Standard Deviation',
                     'stdDevDesc': 'Square root of variance',
+                    'median': 'Median',
+                    'medianDesc': 'Middle value of data',
+                    'mode': 'Mode',
+                    'modeDesc': 'Most frequent value in data',
                     'coeffVar': 'Coefficient of Variation',
                     'coeffVarDesc': 'Relative measure of dispersion',
+                    'quartiles': 'Quartiles',
+                    'q1': 'First Quartile (Q1)',
+                    'q2': 'Second Quartile (Q2)',
+                    'q3': 'Third Quartile (Q3)',
+                    'range': 'Range',
+                    'min': 'Minimum',
+                    'max': 'Maximum',
+                    'rangeValue': 'Range',
+                    'count': 'Data Count',
+                    'countDesc': 'Number of values entered',
                     'yourData': 'Your Data:',
                     'noData': 'No data entered',
-                    'langName': 'فارسی'
+                    'langName': 'فارسی',
+                    'numberWarning': 'Please use English numbers (0-9) for input'
                 }
             };
             
@@ -305,6 +500,29 @@
                 });
             });
             
+            // Clear all inputs
+            clearAllBtn.addEventListener('click', function() {
+                inputContainer.innerHTML = '';
+                // Add one empty input
+                const newInput = document.createElement('div');
+                newInput.className = 'flex items-center';
+                newInput.innerHTML = `
+                    <input type="number" step="any" class="input-transition flex-grow border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="${translations[currentLang].inputPlaceholder}">
+                    <button class="remove-btn ${currentLang === 'fa' ? 'mr-3' : 'ml-3'} text-red-500 hover:text-red-700 p-2 rounded-full hover:bg-red-50 transition-colors">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                inputContainer.appendChild(newInput);
+                
+                // Add event to remove button
+                newInput.querySelector('.remove-btn').addEventListener('click', function() {
+                    inputContainer.removeChild(newInput);
+                });
+                
+                // Hide results
+                resultsSection.classList.add('hidden');
+            });
+            
             // Calculate statistics
             calculateBtn.addEventListener('click', function() {
                 const inputs = inputContainer.querySelectorAll('input');
@@ -321,17 +539,35 @@
                     return;
                 }
                 
+                // Sort values for median and quartiles
+                const sortedValues = [...values].sort((a, b) => a - b);
+                
                 // Calculate statistics
                 const mean = calculateMean(values);
                 const variance = calculateVariance(values, mean);
                 const stdDev = Math.sqrt(variance);
                 const coeffVar = (stdDev / mean) * 100;
+                const median = calculateMedian(sortedValues);
+                const mode = calculateMode(values);
+                const quartiles = calculateQuartiles(sortedValues);
+                const min = Math.min(...values);
+                const max = Math.max(...values);
+                const range = max - min;
                 
                 // Display results
                 document.getElementById('meanResult').textContent = mean.toFixed(4);
                 document.getElementById('varianceResult').textContent = variance.toFixed(4);
                 document.getElementById('stdDevResult').textContent = stdDev.toFixed(4);
                 document.getElementById('coeffVarResult').textContent = coeffVar.toFixed(2) + '%';
+                document.getElementById('medianResult').textContent = median.toFixed(4);
+                document.getElementById('modeResult').textContent = mode.length > 0 ? mode.join(', ') : '-';
+                document.getElementById('q1Result').textContent = quartiles.q1.toFixed(4);
+                document.getElementById('q2Result').textContent = quartiles.q2.toFixed(4);
+                document.getElementById('q3Result').textContent = quartiles.q3.toFixed(4);
+                document.getElementById('minResult').textContent = min.toFixed(4);
+                document.getElementById('maxResult').textContent = max.toFixed(4);
+                document.getElementById('rangeValue').textContent = range.toFixed(4);
+                document.getElementById('countResult').textContent = values.length;
                 
                 // Display data list
                 const dataList = document.getElementById('dataList');
@@ -367,6 +603,50 @@
                 const squaredDiffs = values.map(val => Math.pow(val - mean, 2));
                 const sumSquaredDiffs = squaredDiffs.reduce((acc, val) => acc + val, 0);
                 return sumSquaredDiffs / values.length;
+            }
+            
+            function calculateMedian(sortedValues) {
+                const middle = Math.floor(sortedValues.length / 2);
+                if (sortedValues.length % 2 === 0) {
+                    return (sortedValues[middle - 1] + sortedValues[middle]) / 2;
+                } else {
+                    return sortedValues[middle];
+                }
+            }
+            
+            function calculateMode(values) {
+                const frequencyMap = {};
+                let maxFrequency = 0;
+                const modes = [];
+                
+                values.forEach(value => {
+                    frequencyMap[value] = (frequencyMap[value] || 0) + 1;
+                    if (frequencyMap[value] > maxFrequency) {
+                        maxFrequency = frequencyMap[value];
+                    }
+                });
+                
+                if (maxFrequency === 1) return []; // No mode if all values appear once
+                
+                for (const value in frequencyMap) {
+                    if (frequencyMap[value] === maxFrequency) {
+                        modes.push(parseFloat(value));
+                    }
+                }
+                
+                return modes;
+            }
+            
+            function calculateQuartiles(sortedValues) {
+                const q2 = calculateMedian(sortedValues);
+                
+                const lowerHalf = sortedValues.filter(val => val < q2);
+                const upperHalf = sortedValues.filter(val => val > q2);
+                
+                const q1 = calculateMedian(lowerHalf);
+                const q3 = calculateMedian(upperHalf);
+                
+                return { q1, q2, q3 };
             }
             
             // Add event to initial remove button
